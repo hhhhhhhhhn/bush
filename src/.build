@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "generated from hidden file src/.build !" > "$DIST/README"
+
+echo 'templates also work here, {{echo $USER}}' \
+	| template && cat /tmp/bush >> "$DIST/README"

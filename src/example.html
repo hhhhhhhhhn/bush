@@ -10,7 +10,10 @@
 			{{echo $USER}}</h1>
 		<p>The date command outputted
 {{
-date
-}}</p>
+for n in `seq 10`; do
+	date
+done
+}}
+		</p>
 	</body>
 </html>
