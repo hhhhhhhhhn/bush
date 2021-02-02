@@ -14,7 +14,7 @@ function template() {
 	while IFS= read -d '' -rn1 chr; do
 		if [ "$chr" = "{" ]; then
 			if [ "$IN_BRACKETS" = 0 ]; then
-				IN_BRACKETS=1
+				IN_BRACKETS="{"
 			else
 				IN_BRACKETS=0
 				IN_SCRIPT=1
@@ -22,16 +22,22 @@ function template() {
 			fi
 		elif [ "$chr" = "}" ] && [ "$IN_SCRIPT" = 1 ]; then
 			if [ "$IN_BRACKETS" = 0 ]; then
-				IN_BRACKETS=1
+				IN_BRACKETS="}"
 			else
 				IN_BRACKETS=0
 				IN_SCRIPT=0
 				. /tmp/bush | head -c -1
 			fi
-		elif [ "$IN_SCRIPT" = 1 ]; then
-			printf "$chr" >> /tmp/bush
 		else
-			printf "$chr"
+			if [ ! "$IN_BRACKETS" = 0 ]; then
+				chr="$IN_BRACKETS$chr"
+			fi
+			IN_BRACKETS=0
+			if [ "$IN_SCRIPT" = 1 ]; then
+				printf "%s" "$chr" >> /tmp/bush
+			else
+				printf "%s" "$chr"
+			fi
 		fi
 	done
 }
